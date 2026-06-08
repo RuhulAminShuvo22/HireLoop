@@ -3,6 +3,7 @@ import FeaturesSection from "@/components/FeaturesSection";
 import PricingSection from "@/components/PricingSection";
 import GlobalMouseGlow from "@/components/GlobalMouseGlow";
 import PremiumCTA from "@/components/PremiumCTA";
+import WhyChooseUs from "@/components/WhyChooseUs";
 
 export default function Home() {
   return (
@@ -13,6 +14,7 @@ export default function Home() {
       <FeaturesSection />
       <PricingSection />
       <PremiumCTA></PremiumCTA>
+      <WhyChooseUs></WhyChooseUs>
     </div>
   );
 }
