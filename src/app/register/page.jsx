@@ -234,16 +234,23 @@ export default function RegisterPage() {
         </div>
 
         {/* Google Sign Up */}
-        <Button
-          variant="bordered"
-          size="lg"
-          onPress={handleGoogleLogin}
-          className="w-full border-[#E6DCC8] text-[#3B2F1E]"
-          startContent={<FcGoogle size={22} />}
+        <motion.div
+          variants={itemVariants}
+          whileHover={{ scale: 1.01 }}
+          whileTap={{ scale: 0.99 }}
         >
-          Continue with Google
-        </Button>
-
+          <Button
+            variant="bordered"
+            size="lg"
+            onPress={handleGoogleLogin}
+            className="w-full border-[#E6DCC8] text-[#3B2F1E] bg-white hover:bg-[#F8F5EF] rounded-xl font-semibold"
+          >
+            <div className="flex items-center justify-center gap-3 w-full">
+              <FcGoogle size={24} />
+              <span>Continue with Google</span>
+            </div>
+          </Button>
+        </motion.div>
         {/* Login Link */}
         <div className="text-center mt-8 text-sm text-[#8B6F47]">
           Already have an account?{" "}
