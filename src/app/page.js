@@ -12,9 +12,12 @@ export default function Home() {
 
       <Banner />
       <FeaturesSection />
+      <WhyChooseUs></WhyChooseUs>
+      
+      
       <PricingSection />
       <PremiumCTA></PremiumCTA>
-      <WhyChooseUs></WhyChooseUs>
+      
     </div>
   );
 }
