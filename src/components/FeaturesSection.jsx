@@ -92,43 +92,119 @@ export default function FeaturesSection() {
         </motion.div>
 
         {/* Features Grid */}
-        <div className="mt-16 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={{
+            hidden: {},
+            visible: {
+              transition: {
+                staggerChildren: 0.12,
+              },
+            },
+          }}
+          className="mt-16 grid gap-5 sm:grid-cols-2 xl:grid-cols-4"
+        >
           {features.map((feature, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 25 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{
-                duration: 0.5,
-                delay: index * 0.08,
+              variants={{
+                hidden: {
+                  opacity: 0,
+                  y: 40,
+                  scale: 0.95,
+                },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  scale: 1,
+                  transition: {
+                    duration: 0.6,
+                    ease: "easeOut",
+                  },
+                },
               }}
               whileHover={{
-                y: -8,
-                scale: 1.02,
+                y: -10,
+                scale: 1.03,
               }}
-              className="group rounded-3xl border border-[#E6DCC8] bg-white p-6 shadow-sm transition-all duration-300 hover:border-[#D4A95A] hover:shadow-[0_10px_40px_rgba(212,169,90,0.15)]"
+              className="group relative overflow-hidden rounded-3xl border border-[#E6DCC8] bg-white p-6 shadow-sm transition-all duration-300 hover:border-[#D4A95A] hover:shadow-[0_20px_50px_rgba(212,169,90,0.18)]"
             >
-              <div className="flex items-start gap-4">
-                {/* Icon */}
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-[#E6DCC8] bg-[#FDFBF7] text-[#D4A95A] transition-all duration-300 group-hover:border-[#D4A95A] group-hover:bg-[#FFF8EC] group-hover:scale-110">
-                  <span className="text-xl">{feature.icon}</span>
-                </div>
+              {/* Animated Glow */}
+              <motion.div
+                animate={{
+                  opacity: [0.2, 0.5, 0.2],
+                  scale: [1, 1.15, 1],
+                }}
+                transition={{
+                  duration: 4 + index,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-[#D4A95A]/10 blur-3xl"
+              />
+
+              <div className="relative z-10 flex items-start gap-4">
+                {/* Animated Icon */}
+                <motion.div
+                  animate={{
+                    y: [0, -4, 0],
+                  }}
+                  transition={{
+                    duration: 3 + index * 0.2,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                  className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-[#E6DCC8] bg-[#FDFBF7] text-[#D4A95A] transition-all duration-300 group-hover:border-[#D4A95A] group-hover:bg-[#FFF8EC] group-hover:scale-110"
+                >
+                  <motion.span
+                    animate={{
+                      rotate: [0, 5, -5, 0],
+                    }}
+                    transition={{
+                      duration: 5,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                    className="text-xl"
+                  >
+                    {feature.icon}
+                  </motion.span>
+                </motion.div>
 
                 {/* Content */}
                 <div>
-                  <h3 className="text-lg font-semibold text-[#3B2F1E]">
+                  <motion.h3
+                    animate={{
+                      y: [0, -1, 0],
+                    }}
+                    transition={{
+                      duration: 4,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                    className="text-lg font-semibold text-[#3B2F1E]"
+                  >
                     {feature.title}
-                  </h3>
+                  </motion.h3>
 
                   <p className="mt-2 text-sm leading-7 text-[#6B5B45]">
                     {feature.description}
                   </p>
                 </div>
               </div>
+
+              {/* Bottom Accent Line */}
+              <motion.div
+                initial={{ width: 0 }}
+                whileHover={{ width: "100%" }}
+                transition={{ duration: 0.3 }}
+                className="absolute bottom-0 left-0 h-1 bg-[#D4A95A]"
+              />
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
