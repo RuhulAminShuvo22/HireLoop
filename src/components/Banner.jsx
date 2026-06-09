@@ -259,30 +259,92 @@ export default function Banner() {
             </motion.div>
           </div>
 
+
           {/* Bottom Stats */}
           <motion.div
             initial="hidden"
-            animate="visible"
-            variants={fadeUp}
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={{
+              hidden: {},
+              visible: {
+                transition: {
+                  staggerChildren: 0.15,
+                },
+              },
+            }}
             className="mt-14 grid grid-cols-2 gap-4 lg:grid-cols-4"
           >
             {stats.map((item, index) => (
               <motion.div
                 key={index}
-                whileHover={{ y: -8, scale: 1.03 }}
-                className="rounded-2xl border border-[#E6DCC8] bg-white/90 p-5 text-center shadow-sm backdrop-blur-md transition-all duration-300 hover:border-[#D4A95A]"
+                variants={{
+                  hidden: {
+                    opacity: 0,
+                    y: 40,
+                  },
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    transition: {
+                      duration: 0.6,
+                      ease: "easeOut",
+                    },
+                  },
+                }}
+                whileHover={{
+                  y: -8,
+                  scale: 1.03,
+                }}
+                className="rounded-2xl border border-[#E6DCC8] bg-white/90 p-5 text-center shadow-sm backdrop-blur-md transition-all duration-300 hover:border-[#D4A95A] hover:shadow-[0_15px_35px_rgba(212,169,90,0.18)]"
               >
-                <div className="flex justify-center text-2xl text-[#D4A95A]">
-                  {item.icon}
-                </div>
+                {/* Floating Wrapper */}
+                <motion.div
+                  animate={{
+                    y: [0, -10, 0],
+                  }}
+                  transition={{
+                    duration: 3 + index * 0.4,
+                    repeat: Infinity,
+                    repeatType: "reverse",
+                    ease: "easeInOut",
+                  }}
+                >
+                  {/* Icon */}
+                  <motion.div
+                    animate={{
+                      rotate: [0, 8, -8, 0],
+                    }}
+                    transition={{
+                      duration: 5,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                    className="flex justify-center text-2xl text-[#D4A95A]"
+                  >
+                    {item.icon}
+                  </motion.div>
 
-                <h3 className="mt-3 text-2xl font-bold text-[#3B2F1E] md:text-3xl">
-                  {item.value}
-                </h3>
+                  {/* Value */}
+                  <motion.h3
+                    animate={{
+                      scale: [1, 1.05, 1],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                    className="mt-3 text-2xl font-bold text-[#3B2F1E] md:text-3xl"
+                  >
+                    {item.value}
+                  </motion.h3>
 
-                <p className="mt-1 text-sm text-[#6B5B45]">
-                  {item.label}
-                </p>
+                  {/* Label */}
+                  <p className="mt-1 text-sm text-[#6B5B45]">
+                    {item.label}
+                  </p>
+                </motion.div>
               </motion.div>
             ))}
           </motion.div>
