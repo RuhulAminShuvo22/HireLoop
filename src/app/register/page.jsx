@@ -1,5 +1,5 @@
 "use client";
-
+import { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
@@ -8,6 +8,7 @@ import { Button } from "@heroui/react";
 import { FcGoogle } from "react-icons/fc";
 import { toast } from "react-hot-toast";
 import { authClient } from "@/lib/auth-client";
+import { Label, Radio, RadioGroup } from "@heroui/react";
 
 // Form Animation
 const formVariants = {
@@ -45,18 +46,27 @@ const floatingVariants = {
   }),
 };
 
+// handleRegister function
+
+
+
 export default function RegisterPage() {
   const router = useRouter();
 
+  const [selectedRole, setSelectedRole] = useState("seeker");
   const handleRegister = async (e) => {
     e.preventDefault();
 
     const formData = new FormData(e.target);
-
     const user = Object.fromEntries(formData.entries());
 
     if (user.password.length < 6) {
       toast.error("Password must be at least 6 characters.");
+      return;
+    }
+
+    if (!user.role) {
+      toast.error("Please select a role.");
       return;
     }
 
@@ -66,6 +76,7 @@ export default function RegisterPage() {
         email: user.email,
         password: user.password,
         image: user.photoUrl,
+        role: user.role,
       });
 
       if (error) {
@@ -73,30 +84,29 @@ export default function RegisterPage() {
         return;
       }
 
-      toast.success("Account created successfully! 🎉");
+      toast.success(
+        `Account created successfully as ${user.role === "recruiter"
+          ? "Recruiter"
+          : "Job Seeker"
+        } 🎉`
+      );
 
       e.target.reset();
+
+      setSelectedRole("seeker");
 
       setTimeout(() => {
         router.push("/");
       }, 1500);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error("Something went wrong!");
     }
   };
 
-  const handleGoogleLogin = async () => {
-    try {
-      await authClient.signIn.social({
-        provider: "google",
-        callbackURL: "/",
-      });
-    } catch (error) {
-      console.log(error);
-      toast.error("Google login failed!");
-    }
-  };
+
+
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#F8F5EF] px-4 py-12 overflow-hidden relative">
@@ -211,6 +221,41 @@ export default function RegisterPage() {
             </p>
           </motion.div>
 
+
+          {/* Role Selection */}
+          <motion.div variants={itemVariants}>
+            <label className="block mb-3 text-sm font-semibold text-[#3B2F1E]">
+              Select Your Role
+            </label>
+
+            <div className="flex gap-4">
+              <button
+                type="button"
+                onClick={() => setSelectedRole("seeker")}
+                className={`px-6 py-3 rounded-xl border transition-all duration-300 ${selectedRole === "seeker"
+                    ? "bg-[#D4A95A] text-white border-[#D4A95A]"
+                    : "bg-white text-[#3B2F1E] border-[#E6DCC8]"
+                  }`}
+              >
+                Job Seeker
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setSelectedRole("recruiter")}
+                className={`px-6 py-3 rounded-xl border transition-all duration-300 ${selectedRole === "recruiter"
+                    ? "bg-[#D4A95A] text-white border-[#D4A95A]"
+                    : "bg-white text-[#3B2F1E] border-[#E6DCC8]"
+                  }`}
+              >
+                Recruiter
+              </button>
+            </div>
+
+            {/* Hidden input for form submit */}
+            <input type="hidden" name="role" value={selectedRole} />
+          </motion.div>
+
           <motion.div variants={itemVariants}>
             <Button
               type="submit"
@@ -233,24 +278,81 @@ export default function RegisterPage() {
           </span>
         </div>
 
+
         {/* Google Sign Up */}
         <motion.div
           variants={itemVariants}
-          whileHover={{ scale: 1.01 }}
-          whileTap={{ scale: 0.99 }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
         >
           <Button
             variant="bordered"
             size="lg"
-            onPress={handleGoogleLogin}
-            className="w-full border-[#E6DCC8] text-[#3B2F1E] bg-white hover:bg-[#F8F5EF] rounded-xl font-semibold"
+            onPress={async () => {
+              if (!selectedRole) {
+                toast.error("Please select a role first.");
+                return;
+              }
+
+              try {
+                // Save selected role before Google authentication
+                localStorage.setItem("hireloop-role", selectedRole);
+
+                toast.loading("Redirecting to Google...", {
+                  id: "google-login",
+                });
+
+                await authClient.signIn.social({
+                  provider: "google",
+                  callbackURL: "/",
+                });
+              } catch (error) {
+                console.error(error);
+
+                toast.dismiss("google-login");
+
+                toast.error(
+                  error?.message || "Google sign up failed!"
+                );
+              }
+            }}
+            className="
+      w-full
+      h-14
+      border-2
+      border-[#E6DCC8]
+      bg-white
+      hover:bg-[#F8F5EF]
+      text-[#3B2F1E]
+      rounded-xl
+      font-semibold
+      transition-all
+      duration-300
+      shadow-sm
+      hover:shadow-md
+    "
           >
             <div className="flex items-center justify-center gap-3 w-full">
               <FcGoogle size={24} />
-              <span>Continue with Google</span>
+
+              <div className="flex flex-col items-start leading-none">
+                <span className="font-semibold">
+                  Continue with Google
+                </span>
+
+                <span className="text-xs text-[#8B6F47]">
+                  Signing up as{" "}
+                  <span className="font-semibold">
+                    {selectedRole === "recruiter"
+                      ? "Recruiter"
+                      : "Job Seeker"}
+                  </span>
+                </span>
+              </div>
             </div>
           </Button>
         </motion.div>
+
         {/* Login Link */}
         <div className="text-center mt-8 text-sm text-[#8B6F47]">
           Already have an account?{" "}
