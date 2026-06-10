@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@heroui/react";
 import { toast } from "react-hot-toast";
 import { authClient } from "@/lib/auth-client";
-import { FcGoogle } from "react-icons/fc";
+
 
 // Form Animation
 const formVariants = {
@@ -76,17 +76,7 @@ export default function LoginPage() {
         }
     };
 
-    const handleGoogleLogin = async () => {
-        try {
-            await authClient.signIn.social({
-                provider: "google",
-                callbackURL: "/",
-            });
-        } catch (error) {
-            console.log(error);
-            toast.error("Google login failed!");
-        }
-    };
+    
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-[#F8F5EF] px-4 py-12 overflow-hidden relative">
@@ -181,35 +171,6 @@ export default function LoginPage() {
                     </motion.div>
                 </form>
 
-                {/* Divider */}
-                <div className="relative flex items-center justify-center my-6">
-                    <div className="absolute inset-0 flex items-center">
-                        <div className="w-full border-t border-[#E6DCC8]" />
-                    </div>
-
-                    <span className="relative bg-white px-3 text-xs text-[#8B6F47] font-semibold">
-                        OR
-                    </span>
-                </div>
-
-                {/* Google Login */}
-                <motion.div
-                    variants={itemVariants}
-                    whileHover={{ scale: 1.01 }}
-                    whileTap={{ scale: 0.99 }}
-                >
-                    <Button
-                        variant="bordered"
-                        size="lg"
-                        onPress={handleGoogleLogin}
-                        className="w-full border-[#E6DCC8] text-[#3B2F1E] bg-white hover:bg-[#F8F5EF] rounded-xl font-semibold"
-                    >
-                        <div className="flex items-center justify-center gap-3 w-full">
-                            <FcGoogle size={24} />
-                            <span>Continue with Google</span>
-                        </div>
-                    </Button>
-                </motion.div>
 
                 {/* Register Link */}
                 <div className="text-center mt-8 text-sm text-[#8B6F47]">

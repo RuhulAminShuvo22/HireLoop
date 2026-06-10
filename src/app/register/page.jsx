@@ -5,10 +5,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Button } from "@heroui/react";
-import { FcGoogle } from "react-icons/fc";
+
 import { toast } from "react-hot-toast";
 import { authClient } from "@/lib/auth-client";
-import { Label, Radio, RadioGroup } from "@heroui/react";
+
 
 // Form Animation
 const formVariants = {
@@ -48,8 +48,6 @@ const floatingVariants = {
 
 // handleRegister function
 
-
-
 export default function RegisterPage() {
   const router = useRouter();
 
@@ -71,18 +69,40 @@ export default function RegisterPage() {
     }
 
     try {
+      // Better Auth Signup
       const { error } = await authClient.signUp.email({
         name: user.name,
         email: user.email,
         password: user.password,
         image: user.photoUrl,
-        role: user.role,
       });
 
       if (error) {
         toast.error(error.message || "Registration failed!");
         return;
       }
+
+      // Save user in Express + MongoDB
+      const saveUser = await fetch(
+        "http://localhost:5000/users",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: user.name,
+            email: user.email,
+            image: user.photoUrl,
+            role: user.role,
+            createdAt: new Date(),
+          }),
+        }
+      );
+
+      const result = await saveUser.json();
+
+      console.log(result);
 
       toast.success(
         `Account created successfully as ${user.role === "recruiter"
@@ -92,7 +112,6 @@ export default function RegisterPage() {
       );
 
       e.target.reset();
-
       setSelectedRole("seeker");
 
       setTimeout(() => {
@@ -103,10 +122,6 @@ export default function RegisterPage() {
       toast.error("Something went wrong!");
     }
   };
-
-
-
-
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#F8F5EF] px-4 py-12 overflow-hidden relative">
@@ -233,8 +248,8 @@ export default function RegisterPage() {
                 type="button"
                 onClick={() => setSelectedRole("seeker")}
                 className={`px-6 py-3 rounded-xl border transition-all duration-300 ${selectedRole === "seeker"
-                    ? "bg-[#D4A95A] text-white border-[#D4A95A]"
-                    : "bg-white text-[#3B2F1E] border-[#E6DCC8]"
+                  ? "bg-[#D4A95A] text-white border-[#D4A95A]"
+                  : "bg-white text-[#3B2F1E] border-[#E6DCC8]"
                   }`}
               >
                 Job Seeker
@@ -244,8 +259,8 @@ export default function RegisterPage() {
                 type="button"
                 onClick={() => setSelectedRole("recruiter")}
                 className={`px-6 py-3 rounded-xl border transition-all duration-300 ${selectedRole === "recruiter"
-                    ? "bg-[#D4A95A] text-white border-[#D4A95A]"
-                    : "bg-white text-[#3B2F1E] border-[#E6DCC8]"
+                  ? "bg-[#D4A95A] text-white border-[#D4A95A]"
+                  : "bg-white text-[#3B2F1E] border-[#E6DCC8]"
                   }`}
               >
                 Recruiter
@@ -267,92 +282,7 @@ export default function RegisterPage() {
           </motion.div>
         </form>
 
-        {/* Divider */}
-        <div className="relative flex items-center justify-center my-6">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-[#E6DCC8]" />
-          </div>
-
-          <span className="relative bg-white px-3 text-xs text-[#8B6F47] font-semibold">
-            OR
-          </span>
-        </div>
-
-
-        {/* Google Sign Up */}
-        <motion.div
-          variants={itemVariants}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-        >
-          <Button
-            variant="bordered"
-            size="lg"
-            onPress={async () => {
-              if (!selectedRole) {
-                toast.error("Please select a role first.");
-                return;
-              }
-
-              try {
-                // Save selected role before Google authentication
-                localStorage.setItem("hireloop-role", selectedRole);
-
-                toast.loading("Redirecting to Google...", {
-                  id: "google-login",
-                });
-
-                await authClient.signIn.social({
-                  provider: "google",
-                  callbackURL: "/",
-                });
-              } catch (error) {
-                console.error(error);
-
-                toast.dismiss("google-login");
-
-                toast.error(
-                  error?.message || "Google sign up failed!"
-                );
-              }
-            }}
-            className="
-      w-full
-      h-14
-      border-2
-      border-[#E6DCC8]
-      bg-white
-      hover:bg-[#F8F5EF]
-      text-[#3B2F1E]
-      rounded-xl
-      font-semibold
-      transition-all
-      duration-300
-      shadow-sm
-      hover:shadow-md
-    "
-          >
-            <div className="flex items-center justify-center gap-3 w-full">
-              <FcGoogle size={24} />
-
-              <div className="flex flex-col items-start leading-none">
-                <span className="font-semibold">
-                  Continue with Google
-                </span>
-
-                <span className="text-xs text-[#8B6F47]">
-                  Signing up as{" "}
-                  <span className="font-semibold">
-                    {selectedRole === "recruiter"
-                      ? "Recruiter"
-                      : "Job Seeker"}
-                  </span>
-                </span>
-              </div>
-            </div>
-          </Button>
-        </motion.div>
-
+        
         {/* Login Link */}
         <div className="text-center mt-8 text-sm text-[#8B6F47]">
           Already have an account?{" "}
