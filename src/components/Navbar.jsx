@@ -27,6 +27,8 @@ export default function Navbar() {
   const router = useRouter();
   const { data: session } = useSession();
 
+  console.log(session?.user);
+
   const handleLogout = async () => {
     try {
       await authClient.signOut();
@@ -105,7 +107,9 @@ export default function Navbar() {
                           ? "Recruiter"
                           : "Job Seeker"}
                       </p>
+                      
                     </div>
+                    
                   </div>
                 </Link>
 
