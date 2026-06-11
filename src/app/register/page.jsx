@@ -75,6 +75,7 @@ export default function RegisterPage() {
         email: user.email,
         password: user.password,
         image: user.photoUrl,
+        role: user.role,
       });
 
       if (error) {
@@ -282,7 +283,7 @@ export default function RegisterPage() {
           </motion.div>
         </form>
 
-        
+
         {/* Login Link */}
         <div className="text-center mt-8 text-sm text-[#8B6F47]">
           Already have an account?{" "}

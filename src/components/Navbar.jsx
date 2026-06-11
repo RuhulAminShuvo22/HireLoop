@@ -97,9 +97,15 @@ export default function Navbar() {
                       Hi, {session.user.name?.split(" ")[0]} 👋
                     </p>
 
-                    <p className="text-xs text-[#8B6F47] group-hover:text-[#D4A95A] transition">
-                      Welcome back
-                    </p>
+                    <div className="flex items-center gap-1">
+                      <span className="h-2 w-2 rounded-full bg-green-500"></span>
+
+                      <p className="text-xs text-[#8B6F47] group-hover:text-[#D4A95A] transition">
+                        {session.user.role === "recruiter"
+                          ? "Recruiter"
+                          : "Job Seeker"}
+                      </p>
+                    </div>
                   </div>
                 </Link>
 
@@ -210,14 +216,20 @@ export default function Navbar() {
                           className="h-10 w-10 rounded-full object-cover"
                         />
 
-                        <div>
-                          <p className="font-semibold text-[#3B2F1E]">
+                        <div className="text-left">
+                          <p className="text-sm font-bold text-[#3B2F1E]">
                             Hi, {session.user.name?.split(" ")[0]} 👋
                           </p>
 
-                          <p className="text-xs text-[#8B6F47]">
-                            Welcome back
-                          </p>
+                          <div className="flex items-center gap-1">
+                            <span className="h-2 w-2 rounded-full bg-green-500"></span>
+
+                            <p className="text-xs text-[#8B6F47]">
+                              {session.user.role === "recruiter"
+                                ? "Recruiter"
+                                : "Job Seeker"}
+                            </p>
+                          </div>
                         </div>
                       </Link>
 

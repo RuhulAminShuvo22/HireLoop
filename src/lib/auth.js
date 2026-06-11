@@ -1,6 +1,3 @@
-
-
-
 import dns from "node:dns";
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
@@ -18,13 +15,14 @@ export const auth = betterAuth({
   },
 
   user: {
-       additionalFields: {
-          role: {
-              default: "seeker", //job-seeker//
-              //input: false
-            } 
-        }
+    additionalFields: {
+      role: {
+        type: "string",
+        required: false,
+        defaultValue: "seeker",
+      },
     },
+  },
 
   socialProviders: {
     google: {
