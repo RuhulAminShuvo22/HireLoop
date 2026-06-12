@@ -13,7 +13,7 @@
 "use client";
 
 import JobInfoSection from "@/components/dashboard/jobs/JobInfoSection";
-// import JobDescriptionSection from "@/components/dashboard/jobs/JobDescriptionSection";
+import JobDescriptionSection from "@/components/dashboard/jobs/JobDescriptionSection";
 // import CompanyCard from "@/components/dashboard/jobs/CompanyCard";
 // import PublishButton from "@/components/dashboard/jobs/PublishButton";
 
@@ -32,10 +32,10 @@ export default function NewJobPage() {
       </div>
 
       <JobInfoSection />
-{/* 
+
       <JobDescriptionSection />
 
-      <CompanyCard />
+      {/* <CompanyCard />
 
       <PublishButton /> */}
 
