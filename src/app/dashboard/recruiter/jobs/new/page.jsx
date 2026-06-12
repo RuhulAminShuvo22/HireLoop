@@ -14,31 +14,27 @@
 
 import JobInfoSection from "@/components/dashboard/jobs/JobInfoSection";
 import JobDescriptionSection from "@/components/dashboard/jobs/JobDescriptionSection";
-// import CompanyCard from "@/components/dashboard/jobs/CompanyCard";
-// import PublishButton from "@/components/dashboard/jobs/PublishButton";
+import CompanyCard from "@/components/dashboard/jobs/CompanyCard";
+import PublishButton from "@/components/dashboard/jobs/PublishButton";
 
 export default function NewJobPage() {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    console.log("Publish Job");
+  };
+
   return (
-    <div className="max-w-7xl mx-auto px-8 py-10 space-y-8">
-
-      <div>
-        <h1 className="text-4xl font-bold text-[#3B2F1E]">
-          Post a New Job
-        </h1>
-
-        <p className="text-[#8B6F47] mt-2">
-          Create a new opportunity for talented professionals.
-        </p>
-      </div>
-
+    <form onSubmit={handleSubmit} className="space-y-8">
       <JobInfoSection />
-
       <JobDescriptionSection />
+      <CompanyCard />
 
-      {/* <CompanyCard />
-
-      <PublishButton /> */}
-
-    </div>
+      <PublishButton
+        loading={false}
+        companyApproved={true}
+        canPostJob={true}
+      />
+    </form>
   );
 }
