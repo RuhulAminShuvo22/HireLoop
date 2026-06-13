@@ -1,14 +1,4 @@
-// import React from 'react';
 
-// const NewJob = () => {
-//     return (
-//         <div>
-//             <h2>Create new Job</h2>
-//         </div>
-//     );
-// };
-
-// export default NewJob;
 
 "use client";
 
