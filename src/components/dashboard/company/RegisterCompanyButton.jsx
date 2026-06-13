@@ -52,12 +52,13 @@ export default function RegisterCompanyButton({
           )}
         </Button>
       </div>
-
+{/* //ddd// */}
       {alreadyRegistered && (
         <div className="mt-6 rounded-xl border border-yellow-200 bg-yellow-50 p-4">
           <p className="text-sm text-yellow-700">
             🏢 You have already registered a company. Please wait for admin
             approval or manage your existing company.
+            
           </p>
         </div>
       )}
