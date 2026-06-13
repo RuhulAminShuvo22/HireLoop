@@ -55,6 +55,7 @@ export default function JobInfoSection() {
             name="title"
             placeholder="Senior Frontend Developer"
             className="w-full rounded-xl border border-[#E6DCC8] px-4 py-3 outline-none transition focus:border-[#D4A95A]"
+            required
           />
         </div>
 
@@ -67,14 +68,12 @@ export default function JobInfoSection() {
           <select
             name="category"
             className="w-full rounded-xl border border-[#E6DCC8] px-4 py-3 outline-none transition focus:border-[#D4A95A]"
+            required
           >
             <option value="">Select Category</option>
 
             {categories.map((category) => (
-              <option
-                key={category}
-                value={category}
-              >
+              <option key={category} value={category}>
                 {category}
               </option>
             ))}
@@ -88,16 +87,14 @@ export default function JobInfoSection() {
           </label>
 
           <select
-            name="jobType"
+            name="type"
             className="w-full rounded-xl border border-[#E6DCC8] px-4 py-3 outline-none transition focus:border-[#D4A95A]"
+            required
           >
             <option value="">Select Job Type</option>
 
             {jobTypes.map((type) => (
-              <option
-                key={type}
-                value={type}
-              >
+              <option key={type} value={type}>
                 {type}
               </option>
             ))}
@@ -143,10 +140,7 @@ export default function JobInfoSection() {
             className="w-full rounded-xl border border-[#E6DCC8] px-4 py-3 outline-none transition focus:border-[#D4A95A]"
           >
             {currencies.map((currency) => (
-              <option
-                key={currency}
-                value={currency}
-              >
+              <option key={currency} value={currency}>
                 {currency}
               </option>
             ))}
@@ -201,7 +195,7 @@ export default function JobInfoSection() {
         <label className="flex items-center gap-3">
           <input
             type="checkbox"
-            name="remote"
+            name="isRemote"
             className="h-5 w-5 accent-[#D4A95A]"
           />
 
