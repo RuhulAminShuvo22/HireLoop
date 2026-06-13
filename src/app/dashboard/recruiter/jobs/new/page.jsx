@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import { useState } from "react";
@@ -15,7 +13,6 @@ export default function NewJobPage() {
   const { data: session } = useSession();
 
   const [loading, setLoading] = useState(false);
-  //console.log(job);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,18 +31,33 @@ export default function NewJobPage() {
     job.salaryMin = Number(job.salaryMin);
     job.salaryMax = Number(job.salaryMax);
 
-    // Recruiter Info
+    // Recruiter Email
     job.recruiterEmail = session?.user?.email;
 
-    // Temporary Company ID
-    // পরে Company Registration করলে এটা automatic হবে
-    job.companyId = "6848f9b8d5c6b9f4b0d12345";
-
-    // Default Status
-    job.status = "active";
-    console.log(job);
-
     try {
+      // Get Recruiter's Company
+      const companyResponse = await fetch(
+        `http://localhost:5000/companies/owner/${session?.user?.email}`
+      );
+
+      const companyData = await companyResponse.json();
+
+      if (!companyResponse.ok) {
+        toast.error(companyData.message || "Company not found");
+        return;
+      }
+
+      console.log("Company Data:", companyData);
+
+      // Set Company ID
+      job.companyId = companyData.company._id;
+
+      // Default Status
+      job.status = "active";
+
+      console.log("Job Data:", job);
+
+      // Create Job
       const response = await fetch("http://localhost:5000/jobs", {
         method: "POST",
         headers: {
@@ -58,14 +70,12 @@ export default function NewJobPage() {
 
       if (data.success) {
         toast.success("🎉 Job posted successfully!");
-
         form.reset();
       } else {
         toast.error(data.message);
       }
     } catch (error) {
-      console.error(error);
-
+      console.error("Job Post Error:", error);
       toast.error("Failed to publish job.");
     } finally {
       setLoading(false);
