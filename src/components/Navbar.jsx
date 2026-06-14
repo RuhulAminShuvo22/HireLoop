@@ -293,7 +293,7 @@ export default function Navbar() {
                         </div>
                       </Link>
 
-                      {/* Profile Page */}
+                      {/* Profile Page ..*/}
                       <Link
                         href="/profile"
                         onClick={() => setIsOpen(false)}
