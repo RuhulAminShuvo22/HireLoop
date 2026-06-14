@@ -267,14 +267,14 @@ export default function Navbar() {
                         onClick={() => setIsOpen(false)}
                         className="flex items-center gap-3 py-2"
                       >
-                        {/* <img
+                        <img
                           src={
                             user?.image || session.user.image ||
                             "https://ui-avatars.com/api/?name=User"
                           }
                           alt=""
                           className="h-10 w-10 rounded-full object-cover"
-                        /> */}
+                        />
 
                         <div className="text-left">
                           <p className="text-sm font-bold text-[#3B2F1E]">
