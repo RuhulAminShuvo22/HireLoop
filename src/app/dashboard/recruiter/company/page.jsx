@@ -11,6 +11,7 @@ export default function CompanyPage() {
   const [companies, setCompanies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [industryFilter, setIndustryFilter] = useState("All");
 
   useEffect(() => {
     const fetchCompanies = async () => {
@@ -37,12 +38,23 @@ export default function CompanyPage() {
     }
   }, [session]);
 
-  // Search Filter
-  const filteredCompanies = companies.filter((company) =>
-    company.companyName
+  const industries = [
+    "All",
+    ...new Set(companies.map((company) => company.industry)),
+  ];
+
+  const filteredCompanies = companies.filter((company) => {
+    const matchesSearch = company.companyName
       ?.toLowerCase()
-      .includes(searchTerm.toLowerCase())
-  );
+      .includes(searchTerm.toLowerCase());
+
+    const matchesIndustry =
+      industryFilter === "All" ||
+      company.industry === industryFilter;
+
+    return matchesSearch && matchesIndustry;
+  });
+
 
   return (
     <div className="min-h-screen bg-[#F8F5EF] rounded-3xl border border-[#E5D5B8] p-6">
@@ -72,20 +84,27 @@ export default function CompanyPage() {
       </motion.div>
 
       {/* Search Box */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.2 }}
-        className="mb-6"
-      >
+      <div className="flex flex-col md:flex-row gap-4 mb-6">
         <input
           type="text"
-          placeholder="🔍 Search company by name..."
+          placeholder="🔍 Search company..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full md:w-[400px] px-4 py-3 bg-white border border-[#E5D5B8] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#D4A64F] text-[#3B2A1A]"
+          className="w-full md:w-[350px] px-4 py-3 rounded-xl border border-[#E5D5B8] bg-white focus:outline-none focus:ring-2 focus:ring-[#D4A64F]"
         />
-      </motion.div>
+
+        <select
+          value={industryFilter}
+          onChange={(e) => setIndustryFilter(e.target.value)}
+          className="px-4 py-3 rounded-xl border border-[#E5D5B8] bg-white focus:outline-none focus:ring-2 focus:ring-[#D4A64F]"
+        >
+          {industries.map((industry) => (
+            <option key={industry} value={industry}>
+              {industry}
+            </option>
+          ))}
+        </select>
+      </div>
 
       {/* Result Count */}
       {!loading && (
@@ -159,11 +178,10 @@ export default function CompanyPage() {
               </div>
 
               <span
-                className={`text-xs px-3 py-1 rounded-full font-medium ${
-                  company.isApproved
-                    ? "bg-green-100 text-green-700"
-                    : "bg-yellow-100 text-yellow-700"
-                }`}
+                className={`text-xs px-3 py-1 rounded-full font-medium ${company.isApproved
+                  ? "bg-green-100 text-green-700"
+                  : "bg-yellow-100 text-yellow-700"
+                  }`}
               >
                 {company.isApproved ? "Approved" : "Pending"}
               </span>

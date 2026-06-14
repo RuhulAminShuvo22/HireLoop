@@ -1,4 +1,5 @@
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
+import { Toaster } from "react-hot-toast";
 
 const Dashboardlayout = ({ children }) => {
   return (
@@ -7,6 +8,11 @@ const Dashboardlayout = ({ children }) => {
 
       <main className="flex-1 overflow-x-hidden">
         {children}
+
+        <Toaster
+          position="top-right"
+          reverseOrder={false}
+        />
       </main>
     </div>
   );

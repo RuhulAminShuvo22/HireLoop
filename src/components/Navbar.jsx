@@ -29,6 +29,7 @@ export default function Navbar() {
 
   const router = useRouter();
   const { data: session } = useSession();
+  const [user, setUser] = useState(null);
 
   console.log(session?.user);
   console.log("Role:", session?.user?.role);
@@ -50,6 +51,25 @@ export default function Navbar() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!session?.user?.email) return;
+
+    const fetchUser = async () => {
+      try {
+        const res = await fetch(
+          `http://localhost:5000/users/${session.user.email}`
+        );
+
+        const data = await res.json();
+
+        setUser(data.user || data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchUser();
+  }, [session]);
 
 
   const handleLogout = async () => {
@@ -121,7 +141,7 @@ export default function Navbar() {
 
                   <div className="text-left">
                     <p className="text-sm font-bold text-[#3B2F1E]">
-                      Hi, {session.user.name?.split(" ")[0]} 👋
+                      Hi, {(user?.name || session.user.name)?.split(" ")[0]} 👋
                     </p>
 
                     <p className="text-xs text-[#8B6F47]">
@@ -247,14 +267,14 @@ export default function Navbar() {
                         onClick={() => setIsOpen(false)}
                         className="flex items-center gap-3 py-2"
                       >
-                        <img
+                        {/* <img
                           src={
-                            session.user.image ||
+                            user?.image || session.user.image ||
                             "https://ui-avatars.com/api/?name=User"
                           }
                           alt=""
                           className="h-10 w-10 rounded-full object-cover"
-                        />
+                        /> */}
 
                         <div className="text-left">
                           <p className="text-sm font-bold text-[#3B2F1E]">
