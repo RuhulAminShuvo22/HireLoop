@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -23,11 +23,34 @@ const navLinks = [
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+
+  const menuRef = useRef(null);
 
   const router = useRouter();
   const { data: session } = useSession();
 
   console.log(session?.user);
+  console.log("Role:", session?.user?.role);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(event.target)
+      ) {
+        setProfileMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+
 
   const handleLogout = async () => {
     try {
@@ -76,22 +99,24 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* Desktop Auth Area */}
+
           {/* Desktop Auth Area */}
           <div className="hidden lg:flex items-center gap-4">
             {session?.user ? (
-              <>
-                <Link
-                  href="/profile"
-                  className="group flex items-center gap-3 rounded-2xl border border-[#E6DCC8] bg-white px-4 py-2 transition-all duration-300 hover:shadow-md"
+              <div className="relative" ref={menuRef}>
+
+                {/* Button */}
+                <button
+                  onClick={() => setProfileMenuOpen(!profileMenuOpen)}
+                  className="group flex items-center gap-3 rounded-2xl border border-[#E6DCC8] bg-white px-4 py-2"
                 >
                   <img
                     src={
                       session.user.image ||
                       "https://ui-avatars.com/api/?name=User"
                     }
-                    alt={session.user.name || "User"}
-                    className="h-10 w-10 rounded-full object-cover border border-[#E6DCC8]"
+                    className="h-10 w-10 rounded-full"
+                    alt="user"
                   />
 
                   <div className="text-left">
@@ -99,50 +124,56 @@ export default function Navbar() {
                       Hi, {session.user.name?.split(" ")[0]} 👋
                     </p>
 
-                    <div className="flex items-center gap-1">
-                      <span className="h-2 w-2 rounded-full bg-green-500"></span>
-
-                      <p className="text-xs text-[#8B6F47] group-hover:text-[#D4A95A] transition">
-                        {session.user.role === "recruiter"
-                          ? "Recruiter"
-                          : "Job Seeker"}
-                      </p>
-                      
-                    </div>
-                    
+                    <p className="text-xs text-[#8B6F47]">
+                      {session.user.role === "recruiter"
+                        ? "Recruiter"
+                        : "Job Seeker"}
+                    </p>
                   </div>
-                </Link>
+                </button>
 
-                <motion.button
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={handleLogout}
-                  className="flex items-center gap-2 rounded-xl border border-red-200 px-4 py-2.5 text-red-500 transition hover:bg-red-50"
-                >
-                  <FiLogOut size={18} />
-                  Logout
-                </motion.button>
-              </>
+                {/* Dropdown */}
+                {profileMenuOpen && (
+                  <div className="absolute right-0 mt-3 w-52 bg-white border rounded-xl shadow-lg overflow-hidden">
+
+                    <Link
+                      href="/profile"
+                      onClick={() => setProfileMenuOpen(false)}
+                      className="block px-4 py-2 hover:bg-gray-100"
+                    >
+                      👤 Profile
+                    </Link>
+
+                    <Link
+                      href={
+                        session.user.role === "recruiter"
+                          ? "/dashboard/recruiter"
+                          : "/dashboard/seeker"
+                      }
+                      onClick={() => setProfileMenuOpen(false)}
+                      className="block px-4 py-2 hover:bg-gray-100"
+                    >
+                      📊 Dashboard
+                    </Link>
+
+                    <button
+                      onClick={() => {
+                        setProfileMenuOpen(false);
+                        handleLogout();
+                      }}
+                      className="w-full text-left px-4 py-2 text-red-500 hover:bg-red-50"
+                    >
+                      🚪 Logout
+                    </button>
+
+                  </div>
+                )}
+
+              </div>
             ) : (
               <>
-                <Link
-                  href="/login"
-                  className="font-medium text-[#3B2F1E]/80 transition hover:text-[#3B2F1E] text-[15px]"
-                >
-                  Sign In
-                </Link>
-
-                <motion.div
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <Link
-                    href="/register"
-                    className="rounded-xl bg-[#D4A95A] px-5 py-2.5 font-semibold text-white text-[15px] shadow-sm transition hover:bg-[#C69945]"
-                  >
-                    Get Started
-                  </Link>
-                </motion.div>
+                <Link href="/login">Sign In</Link>
+                <Link href="/register">Get Started</Link>
               </>
             )}
           </div>
@@ -206,8 +237,13 @@ export default function Navbar() {
 
                   {session?.user ? (
                     <>
+                      {/* Profile / Dashboard */}
                       <Link
-                        href="/profile"
+                        href={
+                          session.user.role === "recruiter"
+                            ? "/dashboard/recruiter"
+                            : "/dashboard/seeker"
+                        }
                         onClick={() => setIsOpen(false)}
                         className="flex items-center gap-3 py-2"
                       >
@@ -237,8 +273,21 @@ export default function Navbar() {
                         </div>
                       </Link>
 
+                      {/* Profile Page */}
+                      <Link
+                        href="/profile"
+                        onClick={() => setIsOpen(false)}
+                        className="py-2 font-medium text-[#3B2F1E] hover:text-[#D4A95A]"
+                      >
+                        👤 Profile
+                      </Link>
+
+                      {/* Logout */}
                       <button
-                        onClick={handleLogout}
+                        onClick={() => {
+                          setIsOpen(false);
+                          handleLogout();
+                        }}
                         className="flex items-center gap-2 py-2 text-red-500"
                       >
                         <FiLogOut />
