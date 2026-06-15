@@ -157,6 +157,7 @@ export default function AvailableCompanies() {
                                         width={60}
                                         height={60}
                                         className="rounded-2xl border object-cover bg-gray-100"
+                                        unoptimized
                                     />
 
                                     <div>
@@ -200,7 +201,7 @@ export default function AvailableCompanies() {
                             {/* Buttons */}
                             <div className="mt-8 flex gap-3">
 
-                                {company.website ? (
+                                {company.website?.trim() ? (
                                     <a
                                         href={company.website}
                                         target="_blank"
