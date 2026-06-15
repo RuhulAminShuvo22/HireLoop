@@ -185,7 +185,6 @@ export default function AvailableCompanies() {
 
                             {/* Info */}
                             <div className="space-y-3 mt-6">
-
                                 <div className="flex items-center gap-2 text-[#6B5B45] text-sm">
                                     <FiUsers className="text-[#C8932E]" />
                                     <span>{company.companySize} Employees</span>
@@ -196,6 +195,16 @@ export default function AvailableCompanies() {
                                     <span>Founded {company.foundedYear}</span>
                                 </div>
 
+                                {/* Jobs Posted */}
+                                <div className="flex items-center justify-between mt-4 border-t border-[#F1E3C7] pt-4">
+                                    <span className="text-sm text-[#6B5B45]">
+                                        💼 Jobs Posted
+                                    </span>
+
+                                    <span className="text-sm font-semibold text-[#D4A64F]">
+                                        {company.jobsPosted}
+                                    </span>
+                                </div>
                             </div>
 
                             {/* Buttons */}
