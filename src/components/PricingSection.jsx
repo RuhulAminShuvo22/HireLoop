@@ -11,87 +11,100 @@ import {
 } from "lucide-react";
 
 const plans = {
-  monthly: [
+  jobseekers: [
     {
-      name: "Starter",
+      name: "Free",
       icon: Crown,
-      price: 0,
+      price: "$0",
+      period: "/forever",
       popular: false,
       features: [
-        "Daily AI Match Brief",
-        "Verified Salary Bands",
-        "Company Insight Dashboard",
-        "Unlimited Apply",
+        "Browse & save up to 10 jobs",
+        "Apply to up to 3 jobs per month",
+        "Basic profile",
+        "Email alerts",
       ],
     },
+
     {
-      name: "Growth",
+      name: "Pro",
       icon: Rocket,
-      price: 19,
+      price: "$19",
+      period: "/month",
       popular: true,
       features: [
-        "Everything in Starter",
-        "Priority AI Matching",
-        "Advanced Analytics",
-        "Unlimited Applications",
+        "Apply to up to 30 jobs per month",
+        "Unlimited saved jobs",
+        "Application tracking",
+        "Salary insights",
       ],
     },
+
     {
       name: "Premium",
       icon: Gem,
-      price: 79,
+      price: "$39",
+      period: "/month",
       popular: false,
       features: [
-        "Everything in Growth",
-        "Career Portfolio",
-        "Talent Rooms",
-        "Recruiter Visibility",
+        "Everything in Pro",
+        "Unlimited applications",
+        "Profile boost to recruiters",
+        "Early access to new jobs",
+        "Priority support",
       ],
     },
   ],
 
-  yearly: [
+  recruiters: [
     {
-      name: "Starter",
+      name: "Free",
       icon: Crown,
-      price: 0,
+      price: "$0",
+      period: "/forever",
       popular: false,
       features: [
-        "Daily AI Match Brief",
-        "Verified Salary Bands",
-        "Company Insight Dashboard",
-        "Unlimited Apply",
+        "Up to 3 active job posts",
+        "Basic applicant management",
+        "Standard listing visibility",
+        "Perfect for a company's first year of hiring",
       ],
     },
+
     {
       name: "Growth",
       icon: Rocket,
-      price: 190,
+      price: "$49",
+      period: "/month",
       popular: true,
       features: [
-        "Everything in Starter",
-        "Priority AI Matching",
-        "Advanced Analytics",
-        "Unlimited Applications",
+        "Up to 10 active job posts",
+        "Applicant tracking",
+        "Basic analytics",
+        "Email support",
       ],
     },
+
     {
-      name: "Premium",
+      name: "Enterprise",
       icon: Gem,
-      price: 790,
+      price: "$149",
+      period: "/month",
       popular: false,
       features: [
-        "Everything in Growth",
-        "Career Portfolio",
-        "Talent Rooms",
-        "Recruiter Visibility",
+        "Up to 50 active job posts",
+        "Advanced analytics dashboard",
+        "Featured job listings",
+        "Team collaboration",
+        "Custom branding",
+        "Priority support",
       ],
     },
   ],
 };
 
 export default function PricingSection() {
-  const [billing, setBilling] = useState("monthly");
+  const [planType, setPlanType] = useState("jobseekers");
 
   return (
     <section className="relative overflow-hidden bg-[#F8F5EF] py-24 px-4">
@@ -121,34 +134,34 @@ export default function PricingSection() {
 
         <div className="flex justify-center mt-10">
           <div className="bg-white border border-[#E6DCC8] rounded-full p-1 shadow-lg">
+
             <button
-              onClick={() => setBilling("monthly")}
-              className={`px-6 py-2 rounded-full transition-all ${
-                billing === "monthly"
-                  ? "bg-[#D4A95A] text-white"
-                  : "text-[#3B2F1E]"
-              }`}
+              onClick={() => setPlanType("jobseekers")}
+              className={`px-8 py-3 rounded-full transition-all ${planType === "jobseekers"
+                ? "bg-[#D4A95A] text-white"
+                : "text-[#3B2F1E]"
+                }`}
             >
-              Monthly
+              For Job Seekers
             </button>
 
             <button
-              onClick={() => setBilling("yearly")}
-              className={`px-6 py-2 rounded-full transition-all ${
-                billing === "yearly"
-                  ? "bg-[#D4A95A] text-white"
-                  : "text-[#3B2F1E]"
-              }`}
+              onClick={() => setPlanType("recruiters")}
+              className={`px-8 py-3 rounded-full transition-all ${planType === "recruiters"
+                ? "bg-[#D4A95A] text-white"
+                : "text-[#3B2F1E]"
+                }`}
             >
-              Yearly
+              For Recruiters
             </button>
+
           </div>
         </div>
 
         {/* Cards */}
 
         <div className="grid lg:grid-cols-3 gap-8 mt-16">
-          {plans[billing].map((plan, index) => {
+          {plans[planType].map((plan, index) => {
             const Icon = plan.icon;
 
             return (
@@ -164,10 +177,9 @@ export default function PricingSection() {
                 }}
                 className={`group relative overflow-hidden rounded-3xl border backdrop-blur-xl p-8
                   
-                  ${
-                    plan.popular
-                      ? "border-[#D4A95A] bg-white/80 shadow-[0_0_40px_rgba(212,169,90,.25)]"
-                      : "border-[#E6DCC8] bg-white/60"
+                  ${plan.popular
+                    ? "border-[#D4A95A] bg-white/80 shadow-[0_0_40px_rgba(212,169,90,.25)]"
+                    : "border-[#E6DCC8] bg-white/60"
                   }
                 `}
               >
@@ -192,11 +204,11 @@ export default function PricingSection() {
 
                 <div className="mt-5">
                   <span className="text-5xl font-bold text-[#3B2F1E]">
-                    ${plan.price}
+                    {plan.price}
                   </span>
 
                   <span className="text-gray-500 ml-2">
-                    /{billing === "monthly" ? "month" : "year"}
+                    {plan.period}
                   </span>
                 </div>
 
@@ -216,16 +228,12 @@ export default function PricingSection() {
                 </ul>
 
                 <button
-                  className={`mt-10 w-full rounded-xl py-4 font-semibold transition-all duration-300 flex items-center justify-center gap-2
-                  
-                  ${
-                    plan.popular
-                      ? "bg-[#D4A95A] text-white hover:scale-[1.03]"
+                  className={`mt-10 w-full rounded-xl py-4 font-semibold transition-all duration-300 flex items-center justify-center gap-2 ${plan.popular
+                      ? "bg-[#D4A95A] text-white hover:scale-[1.03] hover:shadow-lg"
                       : "border border-[#D4A95A] text-[#3B2F1E] hover:bg-[#D4A95A] hover:text-white"
-                  }
-                  `}
+                    }`}
                 >
-                  Choose Plan
+                  {plan.buttonText || "Get Started"}
                   <ArrowRight size={18} />
                 </button>
               </motion.div>
