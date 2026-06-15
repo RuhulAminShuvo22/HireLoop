@@ -1,13 +1,24 @@
+"use client";
+
+import { motion } from "framer-motion";
 import PricingCard from "./PricingCard";
 
 export default function PricingGrid({ plans }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-      {plans.map((plan) => (
-        <PricingCard
+      {plans.map((plan, index) => (
+        <motion.div
           key={plan.name}
-          plan={plan}
-        />
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{
+            duration: 0.5,
+            delay: index * 0.15,
+          }}
+        >
+          <PricingCard plan={plan} />
+        </motion.div>
       ))}
     </div>
   );
