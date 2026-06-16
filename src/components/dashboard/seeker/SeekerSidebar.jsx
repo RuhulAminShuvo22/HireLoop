@@ -77,7 +77,7 @@ export default function SeekerSidebar() {
             <div className="px-8 py-8 border-b border-[#E5D5B8]">
                 <Link href="/" className="flex items-center gap-3">
                     <Image
-                        src="/logo.png"
+                        src="/assets/new-logo.png"
                         alt="HireLoop"
                         width={42}
                         height={42}
