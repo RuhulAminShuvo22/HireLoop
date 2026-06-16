@@ -90,7 +90,7 @@ export default function RecruiterApplicationsPage() {
             }
         } catch (error) {
             console.log(error);
-            toast.error("Something went wrong!");
+            toast.error("Something went wrong!!");
         }
     };
 
