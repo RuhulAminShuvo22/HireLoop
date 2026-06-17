@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
 import { FiPlus, FiMinus } from "react-icons/fi";
 
 const faqs = [
@@ -39,29 +38,11 @@ const faqs = [
 
 function FAQItem({ faq, isOpen, onClick }) {
   return (
-    <div
-      className="
-        bg-white
-        border
-        border-[#E7DCC8]
-        rounded-2xl
-        overflow-hidden
-        transition-all
-        duration-300
-        hover:shadow-lg
-      "
-    >
+    <div className="bg-white border border-[#E7DCC8] rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-lg">
+      
       <button
         onClick={onClick}
-        className="
-          w-full
-          flex
-          items-center
-          justify-between
-          text-left
-          px-6
-          py-5
-        "
+        className="w-full flex items-center justify-between text-left px-6 py-5"
       >
         <h3 className="font-semibold text-lg text-[#3B2A1A]">
           {faq.question}
@@ -72,42 +53,30 @@ function FAQItem({ faq, isOpen, onClick }) {
         </div>
       </button>
 
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{
-              height: "auto",
-              opacity: 1,
-            }}
-            exit={{
-              height: 0,
-              opacity: 0,
-            }}
-            transition={{
-              duration: 0.3,
-            }}
-          >
-            <div className="px-6 pb-6 text-gray-600 leading-7">
-              {faq.answer}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {isOpen && (
+        <div className="px-6 pb-6 text-gray-600 leading-7">
+          {faq.answer}
+        </div>
+      )}
+
     </div>
   );
 }
 
 export default function PricingFAQ() {
-  const [openIndex, setOpenIndex] = useState(0);
+  const [openIndex, setOpenIndex] = useState(null);
+
+  const toggleFAQ = (index) => {
+    setOpenIndex(openIndex === index ? null : index);
+  };
 
   return (
     <section className="relative mt-32">
-      {/* Background Glow */}
+
       <div className="absolute left-1/2 top-20 -translate-x-1/2 w-80 h-80 bg-[#D4A54A]/10 blur-[120px] rounded-full" />
 
       <div className="relative">
-        {/* Header */}
+
         <div className="text-center mb-14">
           <span className="uppercase tracking-[6px] text-[#D4A54A] font-semibold">
             FAQ
@@ -123,21 +92,17 @@ export default function PricingFAQ() {
           </p>
         </div>
 
-        {/* FAQ Grid */}
         <div className="max-w-4xl mx-auto space-y-4">
           {faqs.map((faq, index) => (
             <FAQItem
-              key={index}
+              key={faq.question}
               faq={faq}
               isOpen={openIndex === index}
-              onClick={() =>
-                setOpenIndex(
-                  openIndex === index ? null : index
-                )
-              }
+              onClick={() => toggleFAQ(index)}
             />
           ))}
         </div>
+
       </div>
     </section>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   FiCreditCard,
@@ -11,6 +12,11 @@ import {
 
 export default function SeekerBillingPage() {
   const [plan] = useState("Free");
+  const router = useRouter();
+
+  const handleUpgrade = () => {
+    router.push("/pricing?from=billing");
+  };
 
   const paymentHistory = [
     {
@@ -69,7 +75,10 @@ export default function SeekerBillingPage() {
             You are currently on the free plan.
           </p>
 
-          <button className="mt-5 bg-[#D4A64F] hover:bg-[#C8932E] text-white px-6 py-3 rounded-xl font-semibold">
+          <button
+            onClick={handleUpgrade}
+            className="mt-5 bg-[#D4A64F] hover:bg-[#C8932E] text-white px-6 py-3 rounded-xl font-semibold"
+          >
             Upgrade Plan
           </button>
         </motion.div>
