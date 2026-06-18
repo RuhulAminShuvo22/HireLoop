@@ -1,13 +1,89 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { FiCheckCircle } from "react-icons/fi";
+import { toast } from "react-hot-toast";
 
 export default function PaymentSuccessPage() {
+  const searchParams = useSearchParams();
+
+  const sessionId = searchParams.get("session_id");
+
+  const [verified, setVerified] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+
+  useEffect(() => {
+
+    const verifyPayment = async () => {
+
+      if (!sessionId) {
+        toast.error("Invalid payment session");
+        setLoading(false);
+        return;
+      }
+
+      try {
+
+        const res = await fetch(
+          `http://localhost:5000/verify-payment?session_id=${sessionId}`
+        );
+
+        const data = await res.json();
+
+        if (data.success) {
+          setVerified(true);
+        } else {
+          toast.error(data.message || "Payment verification failed");
+        }
+
+      } catch (error) {
+
+        console.error(error);
+
+        toast.error("Something went wrong");
+
+      } finally {
+
+        setLoading(false);
+
+      }
+    };
+
+
+    verifyPayment();
+
+  }, [sessionId]);
+
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <h2 className="text-xl font-semibold">
+          Verifying your payment...
+        </h2>
+      </div>
+    );
+  }
+
+
+  if (!verified) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <h2 className="text-red-500 text-xl">
+          Payment verification failed.
+        </h2>
+      </div>
+    );
+  }
+
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#F8F5EF] p-6">
       <div className="bg-white rounded-3xl shadow-lg p-10 text-center max-w-md">
-        
+
         <FiCheckCircle
           className="text-green-500 mx-auto"
           size={70}
@@ -18,8 +94,7 @@ export default function PaymentSuccessPage() {
         </h1>
 
         <p className="mt-3 text-gray-600">
-          Thank you for upgrading your plan.
-          Your payment has been received successfully.
+          Your Premium plan is now active.
         </p>
 
         <Link
