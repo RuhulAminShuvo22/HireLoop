@@ -1,39 +1,63 @@
+
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   FiCreditCard,
   FiCheckCircle,
-  FiClock,
-  FiDownload,
 } from "react-icons/fi";
+import { authClient } from "@/lib/auth-client";
 
 export default function SeekerBillingPage() {
-  const [plan] = useState("Free");
   const router = useRouter();
+
+  const [billingData, setBillingData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const { data: session } = authClient.useSession();
+
+  useEffect(() => {
+    const fetchBilling = async () => {
+      if (!session?.user?.email) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const res = await fetch(
+          `http://localhost:5000/my-billing?email=${session.user.email}`
+        );
+
+        const data = await res.json();
+
+        if (data.success) {
+          setBillingData(data);
+        }
+      } catch (error) {
+        console.log("Billing fetch error:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBilling();
+  }, [session]);
 
   const handleUpgrade = () => {
     router.push("/pricing?from=billing");
   };
 
-  const paymentHistory = [
-    {
-      id: "TRX-1001",
-      date: "2026-06-10",
-      plan: "Free",
-      amount: "$0",
-      status: "Success",
-    },
-    {
-      id: "TRX-1002",
-      date: "2026-06-01",
-      plan: "Free",
-      amount: "$0",
-      status: "Success",
-    },
-  ];
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#F8F5EF]">
+        <p className="text-lg font-semibold text-[#3B2A1A]">
+          Loading billing information...
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#F8F5EF] p-6">
@@ -53,34 +77,41 @@ export default function SeekerBillingPage() {
         </p>
       </motion.div>
 
-      {/* Current Plan Card */}
+      {/* Top Cards */}
       <div className="grid md:grid-cols-2 gap-6">
 
+        {/* Current Plan */}
         <motion.div
           whileHover={{ y: -5 }}
           className="bg-white p-6 rounded-3xl border border-[#E5D5B8]"
         >
           <div className="flex items-center gap-3 mb-4">
-            <FiCreditCard className="text-[#C8932E]" size={24} />
+            <FiCreditCard
+              className="text-[#C8932E]"
+              size={24}
+            />
             <h2 className="text-xl font-bold text-[#3B2A1A]">
               Current Plan
             </h2>
           </div>
 
           <p className="text-2xl font-bold text-[#D4A64F]">
-            {plan}
+            {billingData?.subscription?.plan || "Free"}
           </p>
 
           <p className="text-sm text-[#7A6A55] mt-2">
-            You are currently on the free plan.
+            Status:{" "}
+            {billingData?.subscription?.status || "inactive"}
           </p>
 
-          <button
-            onClick={handleUpgrade}
-            className="mt-5 bg-[#D4A64F] hover:bg-[#C8932E] text-white px-6 py-3 rounded-xl font-semibold"
-          >
-            Upgrade Plan
-          </button>
+          {billingData?.subscription?.plan !== "Premium" && (
+            <button
+              onClick={handleUpgrade}
+              className="mt-5 bg-[#D4A64F] hover:bg-[#C8932E] text-white px-6 py-3 rounded-xl font-semibold"
+            >
+              Upgrade Plan
+            </button>
+          )}
         </motion.div>
 
         {/* Usage Card */}
@@ -89,7 +120,10 @@ export default function SeekerBillingPage() {
           className="bg-white p-6 rounded-3xl border border-[#E5D5B8]"
         >
           <div className="flex items-center gap-3 mb-4">
-            <FiCheckCircle className="text-green-500" size={24} />
+            <FiCheckCircle
+              className="text-green-500"
+              size={24}
+            />
             <h2 className="text-xl font-bold text-[#3B2A1A]">
               Monthly Usage
             </h2>
@@ -102,7 +136,9 @@ export default function SeekerBillingPage() {
           <div className="mt-4">
             <div className="flex justify-between text-sm mb-2">
               <span>Used</span>
-              <span className="font-semibold">18 / 50</span>
+              <span className="font-semibold">
+                18 / 50
+              </span>
             </div>
 
             <div className="w-full bg-[#F1E4CC] h-3 rounded-full">
@@ -135,28 +171,46 @@ export default function SeekerBillingPage() {
             </thead>
 
             <tbody>
-              {paymentHistory.map((p) => (
-                <tr key={p.id} className="border-b text-[#3B2A1A]">
 
-                  <td className="py-3 font-medium">
-                    {p.id}
+              {billingData?.payments?.length > 0 ? (
+                billingData.payments.map((p) => (
+                  <tr
+                    key={p._id}
+                    className="border-b text-[#3B2A1A]"
+                  >
+                    <td className="py-3 font-medium">
+                      {p._id.slice(-6)}
+                    </td>
+
+                    <td>
+                      {new Date(
+                        p.paidAt
+                      ).toLocaleDateString()}
+                    </td>
+
+                    <td>{p.planId}</td>
+
+                    <td>${p.amount}</td>
+
+                    <td>
+                      <span className="text-green-600 font-semibold flex items-center gap-1">
+                        <FiCheckCircle />
+                        {p.paymentStatus}
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan={5}
+                    className="py-6 text-center text-[#7A6A55]"
+                  >
+                    No payment history found.
                   </td>
-
-                  <td>{p.date}</td>
-
-                  <td>{p.plan}</td>
-
-                  <td>{p.amount}</td>
-
-                  <td>
-                    <span className="text-green-600 font-semibold flex items-center gap-1">
-                      <FiCheckCircle />
-                      {p.status}
-                    </span>
-                  </td>
-
                 </tr>
-              ))}
+              )}
+
             </tbody>
 
           </table>
@@ -168,3 +222,4 @@ export default function SeekerBillingPage() {
     </div>
   );
 }
+
