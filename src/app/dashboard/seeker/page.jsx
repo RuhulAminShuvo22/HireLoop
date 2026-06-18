@@ -1,5 +1,5 @@
 "use client";
-
+import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useSession } from "@/lib/auth-client";
@@ -390,37 +390,7 @@ export default function SeekerDashboard() {
             Quick Actions
           </h2>
 
-          <div className="space-y-4">
-
-            <a
-              href="/dashboard/seeker/jobs"
-              className="block bg-[#D4A64F] hover:bg-[#C8932E] text-white rounded-xl p-4 text-center font-semibold transition"
-            >
-              Browse Jobs
-            </a>
-
-            <a
-              href="/dashboard/seeker/saved"
-              className="block border border-[#D4A64F] text-[#C8932E] hover:bg-[#F8E8C4] rounded-xl p-4 text-center font-semibold transition"
-            >
-              Saved Jobs
-            </a>
-
-            <a
-              href="/dashboard/seeker/applications"
-              className="block border border-[#D4A64F] text-[#C8932E] hover:bg-[#F8E8C4] rounded-xl p-4 text-center font-semibold transition"
-            >
-              My Applications
-            </a>
-
-            <a
-              href="/dashboard/seeker/settings"
-              className="block border border-[#D4A64F] text-[#C8932E] hover:bg-[#F8E8C4] rounded-xl p-4 text-center font-semibold transition"
-            >
-              Update Profile
-            </a>
-
-          </div>
+          <div className="space-y-4"> <Link href="/dashboard/seeker/jobs" className="block bg-[#D4A64F] hover:bg-[#C8932E] text-white rounded-xl p-4 text-center font-semibold transition-all duration-200 hover:shadow-md" > Browse Jobs </Link> <Link href="/dashboard/seeker/saved" className="block border border-[#D4A64F] text-[#C8932E] hover:bg-[#F8E8C4] rounded-xl p-4 text-center font-semibold transition-all duration-200 hover:shadow-md" > Saved Jobs </Link> <Link href="/dashboard/seeker/applications" className="block border border-[#D4A64F] text-[#C8932E] hover:bg-[#F8E8C4] rounded-xl p-4 text-center font-semibold transition-all duration-200 hover:shadow-md" > My Applications </Link> <Link href="/dashboard/seeker/settings" className="block border border-[#D4A64F] text-[#C8932E] hover:bg-[#F8E8C4] rounded-xl p-4 text-center font-semibold transition-all duration-200 hover:shadow-md" > Update Profile </Link> </div>
 
           {/* Progress */}
           <div className="mt-8">
